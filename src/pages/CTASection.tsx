@@ -2,7 +2,7 @@ const CTASection = () => {
   return (
     <div className="bg-blue-100 py-16 px-6 text-center">
       <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
-        Don't wait another day!
+        Don&apos;t wait another day!
       </h2>
       <p className="text-gray-600 mb-6">
         FlowHive gives unlimited storage for any number of projects to your

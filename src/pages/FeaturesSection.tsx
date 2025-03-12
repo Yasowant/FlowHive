@@ -9,7 +9,7 @@ export default function FeaturesSection() {
           </h2>
           <p className="text-gray-600">
             FlowHive helps streamline projects, processes, workflows, track
-            time, and issues. It's built for high-performance teams.
+            time, and issues. It&apos;s built for high-performance teams.
           </p>
 
           {/* Features List */}
@@ -22,8 +22,8 @@ export default function FeaturesSection() {
                   Task List
                 </h4>
                 <p className="text-gray-600">
-                  Stay on top of your task lists and stay in touch with what's
-                  happening.
+                  Stay on top of your task lists and stay in touch with
+                  what&apos;s happening.
                 </p>
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function FeaturesSection() {
                   Gantt Chart
                 </h4>
                 <p className="text-gray-600">
-                  Adjust your plans with a bird's-eye view of tasks.
+                  Adjust your plans with a bird&apos;s-eye view of tasks.
                 </p>
               </div>
             </div>

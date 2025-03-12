@@ -49,7 +49,7 @@ export default function OtpPage() {
               </Button>
             </form>
             <p className="mt-4 text-center text-sm">
-              Didn't receive OTP?{' '}
+              Don&apos;treceive OTP?{' '}
               <button
                 onClick={() => alert('Resend OTP clicked')}
                 className="text-blue-500 hover:underline"
