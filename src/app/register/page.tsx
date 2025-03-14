@@ -14,11 +14,13 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
+    // Client-side validation
     if (!fullName || !email || !password) {
       setError('All fields are required');
       return;
@@ -28,7 +30,7 @@ export default function RegisterPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/register`,
+        'https://flowhive-be-1.onrender.com/api/users/register',
         {
           method: 'POST',
           headers: {
@@ -97,27 +99,22 @@ export default function RegisterPage() {
                 <label className="block text-sm font-medium">Password</label>
                 <Input
                   type="password"
-                  placeholder="Create a password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
-
-              {error && <div className="text-red-500 text-sm">{error}</div>}
-              {success && (
-                <div className="text-green-500 text-sm">{success}</div>
-              )}
-
-              <Button type="submit" disabled={loading} className="w-full">
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+              {success && <p className="text-green-500 text-sm">{success}</p>}
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Registering...' : 'Register'}
               </Button>
             </form>
-
-            <p className="mt-4 text-sm text-center">
+            <p className="mt-4 text-center text-sm">
               Already have an account?{' '}
               <Link href="/login" className="text-blue-500 hover:underline">
-                Login here
+                Login
               </Link>
             </p>
           </CardContent>
