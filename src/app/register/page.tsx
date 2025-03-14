@@ -14,13 +14,11 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
-    // Client-side validation
     if (!fullName || !email || !password) {
       setError('All fields are required');
       return;
@@ -52,9 +50,13 @@ export default function RegisterPage() {
       setFullName('');
       setEmail('');
       setPassword('');
-    } catch (err: any) {
-      console.error('Registration error:', err);
-      setError(err.message || 'Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Registration error:', err);
+        setError(err.message || 'Something went wrong. Please try again.');
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
