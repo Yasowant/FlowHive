@@ -60,11 +60,6 @@ export default function Home() {
                     Login
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/signup" aria-label="Go to Signup">
-                    Signup
-                  </Link>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (

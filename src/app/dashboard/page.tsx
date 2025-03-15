@@ -1,9 +1,13 @@
 'use client';
 
-export default function Dashboard() {
+import withAuth from '@/hoc/withAuth';
+
+function Dashboard() {
   return (
     <div>
-      <h1>Hi,Good Morning</h1>
+      <h1 className="text-2xl font-bold">Hi, Good Morning</h1>
     </div>
   );
 }
+
+export default withAuth(Dashboard);
