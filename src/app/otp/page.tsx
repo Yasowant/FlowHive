@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,18 +9,67 @@ import ClientOnly from '@/components/ClientOnly';
 
 export default function OtpPage() {
   const [otp, setOtp] = useState('');
+  const [email, setEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleVerifyOtp = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('OTP entered:', otp);
-
-    // Add OTP verification logic here
-    if (otp === '123456') {
-      alert('OTP verified');
-      router.push('/login'); // Redirect to login or another page after success
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('userEmail');
+    if (storedEmail) {
+      setEmail(storedEmail);
     } else {
-      alert('Invalid OTP');
+      router.push('/register');
+    }
+  }, [router]);
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    if (!otp || !email) {
+      setError('OTP is required');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(
+        'https://flowhive-be-1.onrender.com/api/otp/verify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, otp }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to verify OTP');
+      }
+
+      setSuccess('OTP verified successfully!');
+
+      // ✅ Clear email after verification
+      localStorage.removeItem('userEmail');
+
+      setTimeout(() => {
+        router.push('/login');
+      }, 100);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || 'Something went wrong. Please try again.');
+      } else {
+        setError('An unknown error occurred');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,9 +93,11 @@ export default function OtpPage() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Verify OTP
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Verifying...' : 'Verify OTP'}
               </Button>
+              {error && <p className="text-red-500">{error}</p>}
+              {success && <p className="text-green-500">{success}</p>}
             </form>
             <p className="mt-4 text-center text-sm">
               Don&apos;treceive OTP?{' '}

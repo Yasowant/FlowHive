@@ -51,6 +51,7 @@ export default function RegisterPage() {
       setSuccess(
         'Registration successful! Please check your email for the OTP.'
       );
+      localStorage.setItem('userEmail', email);
       setFullName('');
       setEmail('');
       setPassword('');
