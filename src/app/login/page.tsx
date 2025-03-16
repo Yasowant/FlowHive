@@ -8,8 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { FcGoogle } from 'react-icons/fc';
 import ClientOnly from '@/components/ClientOnly';
-import api from '@/config/axios';
-import axios from 'axios';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -21,6 +19,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
     if (!email || !password) {
       setError('Both email and password are required');
       return;
@@ -29,16 +28,33 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data } = await api.post('/api/users/login', { email, password });
+      const res = await fetch(
+        'https://flowhive-be-1.onrender.com/api/users/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Invalid email or password');
+      }
+
+      // ✅ Store token in localStorage or sessionStorage (if provided)
       if (data.token) {
         localStorage.setItem('authToken', data.token);
       }
 
+      // ✅ Redirect to dashboard or home page after successful login
       router.push('/dashboard');
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Invalid email or password');
+      if (err instanceof Error) {
+        setError(err.message);
       } else {
         setError('An unknown error occurred');
       }
@@ -75,23 +91,41 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <div className="text-right mt-1">
+                  <Link
+                    href="/forgot-password"
+                    className="text-blue-500 text-sm hover:underline"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
               </div>
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Logging in...' : 'Login'}
               </Button>
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             </form>
-            <div className="flex items-center justify-center mt-4">
-              <button className="flex items-center space-x-2 border p-2 rounded">
-                <FcGoogle size={20} />
-                <span>Sign in with Google</span>
-              </button>
+
+            <div className="flex items-center my-4">
+              <div className="flex-grow border-t"></div>
+              <span className="mx-4 text-sm text-gray-500">OR</span>
+              <div className="flex-grow border-t"></div>
             </div>
-            <div className="text-center mt-4">
-              <Link href="/register" className="text-blue-500">
-                Don&apos;t have an account?{' '}
+
+            <Button
+              className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 border hover:bg-gray-100"
+              variant="outline"
+            >
+              <FcGoogle className="text-xl" />
+              Sign in with Google
+            </Button>
+
+            <p className="mt-4 text-center text-sm">
+              Don&apos;t have an account?{' '}
+              <Link href="/register" className="text-blue-500 hover:underline">
+                Register
               </Link>
-            </div>
+            </p>
           </CardContent>
         </Card>
       </div>
